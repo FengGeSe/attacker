@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
+	attacker "github.com/fenggese/attacker/lib"
 	"os"
 	"time"
-	attacker "zyb.com/attacker/lib"
 )
 
 // implements attacker.Task
