@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	attacker "github.com/fenggese/attacker/lib"
+	attacker "github.com/FengGeSe/attacker/lib"
 	"os"
 	"time"
 )
