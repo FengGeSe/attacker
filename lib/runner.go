@@ -1,7 +1,6 @@
 package lib
 
 import (
-	"fmt"
 	"io"
 	"sync"
 	"time"
@@ -50,8 +49,6 @@ func Run(task Task, rate int, du time.Duration) <-chan *Result {
 }
 
 func RunAndReport(task Task, w io.Writer, rate int, du time.Duration) {
-	now := time.Now().Format("2006-01-02 15:04:05")
-	w.Write([]byte(fmt.Sprintln("开始压测: ", now)))
 	reporter := NewTableReporter()
 	results := Run(task, rate, du)
 	reporter.Process(results)
