@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	attacker "github.com/FengGeSe/attacker/lib"
 	"os"
 	"time"
@@ -52,13 +51,6 @@ func main() {
 
 	task := &myTask{}
 
-	results := attacker.Run(task, 1, 3*time.Second)
-	now := time.Now().Format("2006-01-02 15:04:05")
-	fmt.Println("开始压测: ", now)
-	reporter := attacker.NewTableReporter()
-
-	reporter.Process(results)
-
-	reporter.Report(os.Stdout)
+	attacker.RunAndReport(task, os.Stdout, 1, 3*time.Second)
 
 }
