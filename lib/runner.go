@@ -51,8 +51,9 @@ func Run(task Task, rate int, du time.Duration) <-chan *Result {
 func RunAndReport(task Task, w io.Writer, rate int, du time.Duration) {
 	reporter := NewTableReporter()
 	results := Run(task, rate, du)
-	reporter.Process(results)
-	reporter.Report(w)
+	// reporter.Process(results)
+	// reporter.Report(w)
+	reporter.Write("./result.bin", results)
 }
 
 func attack(task Task, wg *sync.WaitGroup, ticks <-chan uint64, results chan<- *Result) {

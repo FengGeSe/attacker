@@ -53,6 +53,10 @@ func (r *Result) EndTiming() {
 	r.Latency = time.Now().Sub(r.StartTime)
 }
 
+func (r *Result) SetError(err error) {
+	r.Error = err.Error()
+}
+
 //type Results []Result
 //
 //func (rs *Results) Add(r *Result) { *rs = append(*rs, *r) }

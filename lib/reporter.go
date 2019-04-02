@@ -1,9 +1,11 @@
 package lib
 
 import (
+	"encoding/gob"
 	"fmt"
 	"github.com/modood/table"
 	"io"
+	"os"
 	"time"
 )
 
@@ -24,6 +26,49 @@ func (this *TableReporter) Process(results <-chan *Result) {
 	}
 }
 
+// 写入文件
+func (this *TableReporter) Write(path string, results <-chan *Result) {
+	f, err := os.OpenFile(path, os.O_CREATE|os.O_WRONLY, 0655)
+	if err != nil {
+		panic(err)
+	}
+	defer func() {
+		f.Close()
+	}()
+	encoder := gob.NewEncoder(f)
+	for rst := range results {
+		encoder.Encode(rst)
+	}
+}
+
+// 读取结果文件并产生报告
+func (this *TableReporter) ReadAndReport(path string, w io.Writer) error {
+	f, err := os.Open(path)
+	if err != nil {
+		return err
+	}
+	defer func() {
+		f.Close()
+	}()
+
+	decoder := gob.NewDecoder(f)
+
+	for {
+		var result Result
+		err := decoder.Decode(&result)
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			return err
+		}
+		this.Metrics.Add(&result)
+	}
+
+	this.Report(w)
+	return nil
+}
+
 // 输出的格式
 type Table struct {
 	Task                    string
@@ -41,9 +86,20 @@ func (this *TableReporter) Report(w io.Writer) error {
 
 	data := MetricsToTable(this.Metrics)
 
+	// 结果表格化
 	// 	s := table.Table(data)
 	s := table.AsciiTable(data)
 	_, err := w.Write([]byte(s + "\n"))
+
+	// 错误结果
+	var errStr = "Error Set: \n"
+	var count uint64
+	for k, v := range this.Metrics.Errors {
+		count++
+		errStr += fmt.Sprintf("[%d]\t错误: %s\n\t数量: %d\n", count, k, v)
+	}
+	w.Write([]byte(errStr))
+	w.Write([]byte("\n"))
 
 	return err
 }
@@ -75,6 +131,9 @@ func MetricsToTable(m *Metrics) []Table {
 }
 
 func FmtLatency(latency time.Duration) string {
+	if latency <= 0 {
+		return fmt.Sprintf("0 ms")
+	}
 	return fmt.Sprintf("%.2fms", float64(latency)/1e6)
 }
 

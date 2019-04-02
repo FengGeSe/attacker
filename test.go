@@ -4,6 +4,8 @@ import (
 	attacker "github.com/FengGeSe/attacker/lib"
 	"os"
 	"time"
+
+	cmd "github.com/FengGeSe/attacker/cmd"
 )
 
 // implements attacker.Task
@@ -51,6 +53,5 @@ func main() {
 
 	task := &myTask{}
 
-	attacker.RunAndReport(task, os.Stdout, 1, 3*time.Second)
-
+	cmd.Run(task, os.Stdout)
 }
