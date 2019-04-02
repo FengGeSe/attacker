@@ -22,6 +22,8 @@ func init() {
 
 	AttackCmd.Flags().IntP("rate", "r", 0, "攻击频率, 每秒")
 	AttackCmd.Flags().StringP("duration", "d", "", "攻击时长, 10s=10秒钟 5m=5分钟")
+	AttackCmd.Flags().StringP("file", "f", "./result.bin", "攻击结果输出指定文件")
+	AttackCmd.Flags().BoolP("split", "s", false, "是否发出攻击和统计结果分开")
 }
 
 func Run(task attacker.Task, w io.Writer) {
@@ -32,7 +34,17 @@ func Run(task attacker.Task, w io.Writer) {
 			cmd.Println(err)
 			os.Exit(1)
 		}
+		file, err := cmd.Flags().GetString("file")
+		if err != nil {
+			cmd.Println(err)
+			os.Exit(1)
+		}
 		rate, err := cmd.Flags().GetInt("rate")
+		if err != nil {
+			cmd.Println(err)
+			os.Exit(1)
+		}
+		split, err := cmd.Flags().GetBool("split")
 		if err != nil {
 			cmd.Println(err)
 			os.Exit(1)
@@ -53,7 +65,13 @@ func Run(task attacker.Task, w io.Writer) {
 		// 3. 开始攻击
 		now := time.Now().Format("2006-01-02 15:04:05")
 		cmd.Printf("开始压测: %s , rate=%d/s, duration=%s\n", now, rate, du)
-		attacker.RunAndReport(task, w, rate, duration)
+		if split {
+			attacker.RunOnly(task, w, rate, duration, file)
+
+		} else {
+			attacker.RunAndReport(task, w, rate, duration)
+
+		}
 	}
 
 	if err := RootCmd.Execute(); err != nil {

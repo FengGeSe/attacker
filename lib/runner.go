@@ -48,12 +48,19 @@ func Run(task Task, rate int, du time.Duration) <-chan *Result {
 	return results
 }
 
+// 发出攻击，同时生成报告
 func RunAndReport(task Task, w io.Writer, rate int, du time.Duration) {
 	reporter := NewTableReporter()
 	results := Run(task, rate, du)
-	// reporter.Process(results)
-	// reporter.Report(w)
-	reporter.Write("./result.bin", results)
+	reporter.Process(results)
+	reporter.Report(w)
+}
+
+// 发起攻击，将结果放到file文件中
+func RunOnly(task Task, w io.Writer, rate int, du time.Duration, file string) {
+	reporter := NewTableReporter()
+	results := Run(task, rate, du)
+	reporter.Write(file, results)
 }
 
 func attack(task Task, wg *sync.WaitGroup, ticks <-chan uint64, results chan<- *Result) {
