@@ -1,9 +1,11 @@
 package main
 
 import (
-	attacker "github.com/FengGeSe/attacker/lib"
+	"fmt"
 	"os"
 	"time"
+
+	attacker "github.com/FengGeSe/attacker/lib"
 
 	cmd "github.com/FengGeSe/attacker/cmd"
 )
@@ -11,7 +13,9 @@ import (
 // implements attacker.Task
 type myTask struct{}
 
-func (t *myTask) Init() {}
+func (t *myTask) Init() {
+	fmt.Println("haha")
+}
 
 var count = 0
 
@@ -47,6 +51,7 @@ func (t *myTask) Run() *attacker.Result {
 }
 
 func (t *myTask) Destroy() {
+	fmt.Println("Destroy")
 }
 
 func main() {

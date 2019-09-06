@@ -65,13 +65,14 @@ func Run(task attacker.Task, w io.Writer) {
 		// 3. 开始攻击
 		now := time.Now().Format("2006-01-02 15:04:05")
 		cmd.Printf("开始压测: %s , rate=%d/s, duration=%s\n", now, rate, du)
+
+		task.Init()
 		if split {
 			attacker.RunOnly(task, w, rate, duration, file)
-
 		} else {
 			attacker.RunAndReport(task, w, rate, duration)
-
 		}
+		task.Destroy()
 	}
 
 	if err := RootCmd.Execute(); err != nil {

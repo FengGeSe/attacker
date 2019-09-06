@@ -66,16 +66,13 @@ func RunOnly(task Task, w io.Writer, rate int, du time.Duration, file string) {
 func attack(task Task, wg *sync.WaitGroup, ticks <-chan uint64, results chan<- *Result) {
 	defer wg.Done()
 	for t := range ticks {
-		task.Init()
-
 		startTime := time.Now()
+		// run
 		rst := task.Run()
+
 		rst.StartTime = startTime
 		rst.EndTiming()
-
 		rst.Id = t
-
 		results <- rst
-		task.Destroy()
 	}
 }
