@@ -3,10 +3,11 @@ package lib
 import (
 	"encoding/gob"
 	"fmt"
-	"github.com/modood/table"
 	"io"
 	"os"
 	"time"
+
+	"github.com/modood/table"
 )
 
 type TableReporter struct {
@@ -21,9 +22,11 @@ func NewTableReporter() *TableReporter {
 }
 
 func (this *TableReporter) Process(results <-chan *Result) {
+	this.Metrics.StartTime = time.Now()
 	for rst := range results {
 		this.Metrics.Add(rst)
 	}
+	this.Metrics.EndTime = time.Now()
 }
 
 // 写入文件

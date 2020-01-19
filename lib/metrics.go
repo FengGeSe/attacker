@@ -3,8 +3,10 @@ package lib
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/influxdata/tdigest"
+	"math"
 	"time"
+
+	"github.com/influxdata/tdigest"
 )
 
 type Metrics struct {
@@ -12,6 +14,8 @@ type Metrics struct {
 	Rate       float64             `json:"rate" desc:"请求速率每秒"`
 	Ratio      float64             `json:"ratio" desc:"成功率"`
 	Total      uint64              `json:"total" desc:"总共请求或操作数"`
+	StartTime  time.Time           `json:"startTime" desc:"开始时间"`
+	EndTime    time.Time           `json:"endTime" desc:"结束时间"`
 	Success    uint64              `json:"success" desc:"成功的请求或操作数"`
 	SubMetrics map[string]*Metrics `json:"sub-metrics" desc:"子操作的统计"`
 	Errors     map[string]uint64   `json:"errors" desc:"错误集合"`
@@ -88,9 +92,23 @@ func (m *Metrics) String() string {
 
 func (m *Metrics) Close() {
 	// 请求速率，只有父任务的统计才有意义, 这里不考虑子任务的rate
-	m.Rate = float64(m.Success) / m.Latencies.Total.Seconds()
+	total := m.EndTime.Sub(m.StartTime).Seconds()
+	// 精确到0.01, 四舍五入
+	total = precision(total, 2, true)
+	if total == 0 {
+		total = 1
+	}
+	m.Rate = float64(m.Success) / total
 	// 其他统计信息递归处理
 	Close(m)
+}
+
+func precision(f float64, prec int, round bool) float64 {
+	pow10_n := math.Pow10(prec)
+	if round {
+		return math.Trunc((f+0.5/pow10_n)*pow10_n) / pow10_n
+	}
+	return math.Trunc((f)*pow10_n) / pow10_n
 }
 
 func Close(m *Metrics) {

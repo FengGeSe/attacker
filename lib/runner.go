@@ -14,7 +14,6 @@ import (
 var workers = uint64(10)
 
 func Run(task Task, rate int, du time.Duration) <-chan *Result {
-
 	var wg sync.WaitGroup
 	ticks := make(chan uint64)
 	results := make(chan *Result)
@@ -69,7 +68,6 @@ func attack(task Task, wg *sync.WaitGroup, ticks <-chan uint64, results chan<- *
 		startTime := time.Now()
 		// run
 		rst := task.Run()
-
 		rst.StartTime = startTime
 		rst.EndTiming()
 		rst.Id = t

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"time"
 
@@ -13,9 +12,7 @@ import (
 // implements attacker.Task
 type myTask struct{}
 
-func (t *myTask) Init() {
-	fmt.Println("haha")
-}
+var _ attacker.Task = &myTask{}
 
 var count = 0
 
@@ -48,10 +45,6 @@ func (t *myTask) Run() *attacker.Result {
 	count++
 
 	return rst
-}
-
-func (t *myTask) Destroy() {
-	fmt.Println("Destroy")
 }
 
 func main() {
