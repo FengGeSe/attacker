@@ -19,30 +19,40 @@ var count = 0
 func (t *myTask) Run() *attacker.Result {
 	rst := attacker.NewResult("流程压测")
 	// A
-	rstA := rst.SubResult("操作A")
-	rstA.StartTiming()
-	time.Sleep(1 * time.Millisecond)
-	rstA.EndTiming()
+	{
+		subRst := rst.SubResult("操作A")
+		subRst.StartTiming()
+		// do something
+		time.Sleep(1 * time.Millisecond)
+		subRst.EndTiming()
+	}
 
 	// B
-	rstB := rst.SubResult("操作B")
-	rstB.StartTiming()
-	time.Sleep(1 * time.Millisecond)
-	rstB.EndTiming()
+	{
+		subRst := rst.SubResult("操作B")
+		subRst.StartTiming()
+		// do something
+		time.Sleep(1 * time.Millisecond)
+		subRst.EndTiming()
 
-	if count == 1 {
-		rstB.Code = 500
-		rstB.Error = "出错了偶"
+		// mock error
+		if count == 1 {
+			subRst.Code = 500
+			subRst.Error = "出错了偶"
+			count++
+			return rst
+		}
 		count++
-		return rst
 	}
 
 	// C
-	rstC := rst.SubResult("操作C")
-	rstC.StartTiming()
-	time.Sleep(1 * time.Millisecond)
-	rstC.EndTiming()
-	count++
+	{
+		subRst := rst.SubResult("操作C")
+		subRst.StartTiming()
+		// do something
+		time.Sleep(1 * time.Millisecond)
+		subRst.EndTiming()
+	}
 
 	return rst
 }
