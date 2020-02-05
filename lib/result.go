@@ -8,17 +8,16 @@ import (
 )
 
 type Result struct {
-	Name           string             `json:"name" desc:"任务或操作名称"`
-	Id             uint64             `json:"Id" desc:"每次任务的ID"`
-	StartTime      time.Time          `json:"start_time" desc:"任务开始执行时间"`
-	Latency        time.Duration      `json:"latency" desc:"耗时"`
-	BytesOut       uint64             `json:"bytes_out"`
-	BytesIn        uint64             `json:"bytes_in"`
-	Code           uint16             `json:"code" desc:"返回码"`
-	Error          string             `json:"error" desc:"错误信息"`
-	SubResults     map[string]*Result `json:"sub_results" desc:"子操作的结果"`
-	subResultOrder []string           `desc:"子操作的顺序"`
-	isMainResult   bool               `desc:"是否是主任务的结果"`
+	Name         string             `json:"name" desc:"任务或操作名称"`
+	Id           uint64             `json:"Id" desc:"每次任务的ID"`
+	StartTime    time.Time          `json:"start_time" desc:"任务开始执行时间"`
+	Latency      time.Duration      `json:"latency" desc:"耗时"`
+	BytesOut     uint64             `json:"bytes_out"`
+	BytesIn      uint64             `json:"bytes_in"`
+	Code         uint16             `json:"code" desc:"返回码"`
+	Error        string             `json:"error" desc:"错误信息"`
+	SubResults   map[string]*Result `json:"sub_results" desc:"子操作的结果"`
+	isMainResult bool               `desc:"是否是主任务的结果"`
 }
 
 func NewResult(name string) *Result {
