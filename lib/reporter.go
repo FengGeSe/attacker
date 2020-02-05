@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"sort"
 	"time"
 
 	"github.com/modood/table"
@@ -17,7 +18,7 @@ type TableReporter struct {
 // 处理结果输出到表格
 func NewTableReporter() *TableReporter {
 	return &TableReporter{
-		Metrics: &Metrics{},
+		Metrics: NewMetrics(),
 	}
 }
 
@@ -126,8 +127,19 @@ func MetricsToTable(m *Metrics) []Table {
 
 	tables = append(tables, tb)
 
-	for _, v := range m.SubMetrics {
-		tbs := MetricsToTable(v)
+	if len(m.SubMetrics) == 0 {
+		return tables
+	}
+
+	// 子任务排序
+	subMetricsNames := sort.StringSlice{}
+	for k, _ := range m.SubMetrics {
+		subMetricsNames = append(subMetricsNames, k)
+	}
+	subMetricsNames.Sort()
+
+	for _, n := range subMetricsNames {
+		tbs := MetricsToTable(m.SubMetrics[n])
 		tables = append(tables, tbs...)
 	}
 	return tables
