@@ -11,8 +11,8 @@ import (
 
 var ReportCmd = &cobra.Command{
 	Use:   "report",
-	Short: "从结果文件中生成报告",
-	Long:  `从结果文件中生成报告`,
+	Short: "make report table from result file",
+	Long:  `make report table from result file`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// 1. 读取参数
 		path, err := cmd.Flags().GetString("file")
