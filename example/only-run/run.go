@@ -5,8 +5,6 @@ import (
 	"time"
 
 	attacker "github.com/FengGeSe/attacker/lib"
-
-	cmd "github.com/FengGeSe/attacker/cmd"
 )
 
 // implements attacker.Task
@@ -58,8 +56,7 @@ func (t *myTask) Run() *attacker.Result {
 }
 
 func main() {
-
 	task := &myTask{}
 
-	cmd.Run(task, os.Stdout)
+	attacker.RunOnly(task, os.Stdout, 10, 2*time.Second, "./result.out")
 }

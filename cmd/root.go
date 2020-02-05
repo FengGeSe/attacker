@@ -6,6 +6,6 @@ import (
 
 var RootCmd = &cobra.Command{
 	Use:   "attacker",
-	Short: "压测工具",
-	Long:  `压测工具`,
+	Short: "Attacker压测工具",
+	Long:  `Attacker压测工具`,
 }
