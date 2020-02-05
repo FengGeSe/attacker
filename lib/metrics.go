@@ -23,6 +23,10 @@ type Metrics struct {
 	Latencies LatencyMetrics `json:"latencies"`
 }
 
+func NewMetrics() *Metrics {
+	return &Metrics{}
+}
+
 func (m *Metrics) Add(r *Result) {
 	// 错误统计
 	Add(m, r)
@@ -38,7 +42,6 @@ func Add(m *Metrics, r *Result) string {
 	}
 
 	// 统计子操作
-	// 	var err string
 	for k, v := range r.SubResults {
 		if m.SubMetrics == nil {
 			m.SubMetrics = make(map[string]*Metrics)
