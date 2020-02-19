@@ -36,19 +36,16 @@ func (r *Result) String() string {
 	return string(data)
 }
 
-var count = 1
-
 func (r *Result) SubResult(name string) *Result {
 	if !r.isMainResult {
 		// 不允许子操作还有子操作
 		panic("不允许子操作还有子操作")
 	}
-	subName := fmt.Sprintf(" %d.%s", count, name)
+	subName := fmt.Sprintf(" %s", name)
 	subRst := &Result{
 		Id:   r.Id,
 		Name: subName,
 	}
-	count++
 	if r.SubResults == nil {
 		r.SubResults = make(map[string]*Result)
 	}
